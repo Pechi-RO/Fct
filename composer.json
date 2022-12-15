@@ -1,0 +1,22 @@
+{
+    "name": "app/fct",
+    "description": "proyecto fct",
+    "type": "project",
+    "license": "free",
+    "autoload": {
+        "psr-4": {
+            "Fct\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "Pechi-RO",
+            "email": "f.ruizortega@outlook.es"
+        }
+    ],
+    "require": {
+        "fakerphp/faker": "^1.21",
+        "bluemmb/faker-picsum-photos-provider": "^2.0",
+        "mmo/faker-images": "^0.7.0"
+    }
+}
