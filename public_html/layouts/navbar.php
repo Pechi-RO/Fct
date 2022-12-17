@@ -1,5 +1,5 @@
 <link rel="stylesheet" href="../css/bootstrap.css" />
-
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.1/css/all.min.css" integrity="sha512-MV7K8+y+gLIBoVD59lQIYicR65iaqukzvf/nwasF0nqhPay5w/9lJmVM2hMDcnK1OnMGCdVK+iQrJ7lzPJQd1w==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 
 <script>
@@ -40,8 +40,11 @@ function myFunction() {
   background-color: #2b4663;
   color: white;
 }
+.ripple-surface{
+  padding-right: 2.5rem;
+}
 </style>
-<nav class="navbar navbar-expand-lg navbar-dark bg-primary" style="position: fixed;top: 0;width: 100%;z-index:1000">
+<nav class="navbar navbar-expand-lg navbar-dark bg-primary" style="position: fixed;top: 0;width: 100%;z-index:1000;">
   <div class="container-fluid">
     <a class="navbar-brand" href="index.php" style="width: 10%;"><img src="<?="../logo.png";?>" width="100%" height="100%"></a>
     
@@ -77,17 +80,28 @@ function myFunction() {
         </li>
         -->
 
-      </ul>
+      <li class="nav-item">
       <form method="GET" action="viviendas.php" class="d-flex">
         <div style="display: none;">
         <input type="hidden" name="filtro" value="<?php if(isset($_GET['filtro'])) echo $_GET['filtro'];?>">
         </div>
         <input class="form-control me-sm-2" name="buscador" placeholder="Buscador">
-        <button class="btn btn-secondary my-2 my-sm-0" type="submit">Buscador</button>
+        <button class="btn btn-secondary my-2 my-sm-0" type="submit" style="padding-right: 2.5rem;padding-left:2.5rem;">Buscador</button>
       </form>
-      
+      </li>
+     
+      </ul>
+      <div class="d-flex">
+        <button class="btn btn-primary">
+        <i class="fa-solid fa-right-to-bracket"></i>
+        </button>
+
+      </div>
     </div>
    
         
   </div>
 </nav>
+<div style="margin-top:5rem; ">
+
+</div>

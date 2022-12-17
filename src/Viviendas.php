@@ -13,6 +13,10 @@ class Viviendas extends Conexion {
     private $info;
     private $estado;
     private $tipo;
+    private $zona;
+    private $precio;
+
+
     
     public function __construct()
     {
@@ -25,15 +29,20 @@ class Viviendas extends Conexion {
             return;
         }
 
-        $faker=Factory::create('es_ES');
+        for($i=0;$i<50;$i++){
+             $faker=Factory::create('es_ES');
         $array_estado=['en venta','vendida','arras'];
         $array_tipo=['vivienda','local','terreno'];
+        $array_zona=['Villaines','Huercal','Centro','Pescaderia','Afueras'];
 
         $nombre=$faker->name();
         $descripcion=$faker->text();
         $info=$faker->text();
         $estado=$faker->randomElement($array_estado,1);
         $tipo=$faker->randomElement($array_tipo,1);
+        $zona=$faker->randomElement($array_zona,1);
+        $precio=$faker->numberBetween(40000,300000);
+
 
         (new Viviendas)
         ->setNombre($nombre)
@@ -41,7 +50,12 @@ class Viviendas extends Conexion {
         ->setInfo($info)
         ->setEstado($estado)
         ->setTipo($tipo)
+        ->setZona($zona)
+        ->setPrecio($precio)
         ->create();
+        }
+
+       
     
         
     
@@ -60,10 +74,58 @@ class Viviendas extends Conexion {
         return ($stmt->rowCount());
     }
 
+    public function getTipos(){
+        $q="SELECT DISTINCT tipo from viviendas";
+        $stmt=parent::$conexion->prepare($q);
+        try{
+            $stmt->execute();
+        }
+        catch(PDOException $ex){
+            die('Error al leer todos los tipos de viviendas: '.$ex->getMessage());
+        }
+        parent::$conexion=null;
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+    public function getZonas(){
+        $q="SELECT DISTINCT zona from viviendas";
+        $stmt=parent::$conexion->prepare($q);
+        try{
+            $stmt->execute();
+        }
+        catch(PDOException $ex){
+            die('Error al leer todos las zonas de viviendas: '.$ex->getMessage());
+        }
+        parent::$conexion=null;
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+    public function countZonas($array){
+        //echo "<pre>zonas";var_dump($array);echo "</pre>";
+        $q="SELECT";
+        foreach($array as $k=>$v){
+            if($k==count($array)-1){
+                $q.="(SELECT COUNT(zona) FROM viviendas WHERE viviendas.zona='{$v['zona']}' ) as cuenta_{$k}";
+            }else{
+                $q.="(SELECT COUNT(zona) FROM viviendas WHERE viviendas.zona='{$v['zona']}' ) as cuenta_{$k},";
+
+            }
+
+        }
+        //echo $q;
+        $stmt=parent::$conexion->prepare($q);
+        try{
+            $stmt->execute();
+        }
+        catch(PDOException $ex){
+            die('Error al contar las zonas de viviendas: '.$ex->getMessage());
+        }
+        parent::$conexion=null;
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
     public function create(){
         $q="INSERT INTO 
-            Viviendas (nombre,descripcion,info,estado,tipo) 
-            values(:n,:d,:i,:e,:t)";
+            Viviendas (nombre,descripcion,info,estado,tipo,zona,precio) 
+            values(:n,:d,:i,:e,:t,:z,:p)";
         $stmt=parent::$conexion->prepare($q);
         try{
             $stmt->execute([
@@ -71,7 +133,10 @@ class Viviendas extends Conexion {
                 ':d'=>$this->descripcion,
                 ':i'=>$this->info,
                 ':e'=>$this->estado,
-                ':t'=>$this->tipo,               
+                ':t'=>$this->tipo,            
+                ':z'=>$this->zona,               
+                ':p'=>$this->precio,               
+   
             ]);
         }
         catch(PDOException $ex){
@@ -99,8 +164,52 @@ class Viviendas extends Conexion {
         
     }
 
-    public function readAllViviendas(){
-        $q="select * from viviendas";
+    public function readAllViviendas($filtros=null){
+        if($filtros==NULL){
+            $q="select * from viviendas";
+
+        }else{
+            $where="";
+            if(isset($filtros['buscador']) && $filtros['buscador']!=""){
+                $where.="(viviendas.nombre LIKE '{$filtros['buscador']}') AND";
+            }
+            if(isset($filtros['filtro']) && $_GET['filtro']!=""){
+                $where.=" (viviendas.tipo = '{$filtros['filtro']}') AND";
+            }
+
+            if((isset($filtros['rango']) && $filtros['rango']!="") && (isset($filtros['max']) && $filtros['max']!="")){
+                $where.=" (viviendas.precio BETWEEN {$filtros['rango']} AND {$filtros['max']}) AND";
+            }else if(!isset($filtros['rango']) && (isset($filtros['min']) && $filtros['min']!="") && (isset($filtros['max']) && $filtros['max']!="")){
+                $where.=" (viviendas.precio BETWEEN {$filtros['min']} AND {$filtros['max']}) AND";
+            }elseif(
+                (
+                    isset($filtros['rango']) && $filtros['rango']!=""
+                    ) || 
+                    isset($filtros['min']) && 
+                    (
+                        isset($filtros['min']) && $filtros['min']!=""
+                    ) && 
+                    !isset($filtros['max']
+                )){
+
+                if(isset($filtros['rango'])){
+                    $where.=" (viviendas.precio BETWEEN {$filtros['rango']} AND 999999) AND";
+                }else if(isset($filtros['min'])){
+                    $where.=" (viviendas.precio BETWEEN {$filtros['min']} AND 999999) AND";
+                }
+
+            }
+
+            
+                $q="select * from viviendas
+                WHERE 1=1
+                AND
+                {$where}
+                1=1
+                ORDER BY precio ASC,nombre ASC
+                ";
+        }
+        //echo "<pre>";echo $q;echo "</pre>";
         $stmt=parent::$conexion->prepare($q);
         try{
             $stmt->execute();
@@ -234,4 +343,26 @@ class Viviendas extends Conexion {
 
         return $this;
     }
+
+    /**
+     * Get the value of zona
+     */ 
+    public function getZona()
+    {
+        return $this->zona;
+    }
+
+    /**
+     * Set the value of zona
+     *
+     * @return  self
+     */ 
+    public function setZona($zona)
+    {
+        $this->zona = $zona;
+
+        return $this;
+    }
+
+  
 }

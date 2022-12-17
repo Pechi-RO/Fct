@@ -70,11 +70,11 @@ $item=$vivienda->fetch(PDO::FETCH_OBJ);
                 <div class="col-lg-7 col-md-7 col-sm-6">
                     <h4 class="box-title mt-5">Descripción</h4>
                     <p><?=$item->descripcion;?></p>
-                    <!--
+                    
                     <h2 class="mt-5">
-                        $153<small class="text-success">(36%off)</small>
+                        <?= $item->precio;?><small class="text-success">&euro;</small>
                     </h2>
-                    -->
+                    
                     
                     <h3 class="box-title mt-5">Características</h3>
                     <ul class="list-unstyled">

@@ -1,22 +1,22 @@
 <?php return array(
     'root' => array(
-        'pretty_version' => '1.0.0+no-version-set',
-        'version' => '1.0.0.0',
+        'pretty_version' => 'dev-main',
+        'version' => 'dev-main',
         'type' => 'project',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
-        'reference' => NULL,
+        'reference' => 'a05759282dbdc2f57fd8b6c077b548b7a0d3e262',
         'name' => 'app/fct',
         'dev' => true,
     ),
     'versions' => array(
         'app/fct' => array(
-            'pretty_version' => '1.0.0+no-version-set',
-            'version' => '1.0.0.0',
+            'pretty_version' => 'dev-main',
+            'version' => 'dev-main',
             'type' => 'project',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),
-            'reference' => NULL,
+            'reference' => 'a05759282dbdc2f57fd8b6c077b548b7a0d3e262',
             'dev_requirement' => false,
         ),
         'bluemmb/faker-picsum-photos-provider' => array(
@@ -44,6 +44,15 @@
             'install_path' => __DIR__ . '/../mmo/faker-images',
             'aliases' => array(),
             'reference' => 'fff9965ce5e9587301311de856f126a11ce1dc24',
+            'dev_requirement' => false,
+        ),
+        'phpmailer/phpmailer' => array(
+            'pretty_version' => 'v6.7.1',
+            'version' => '6.7.1.0',
+            'type' => 'library',
+            'install_path' => __DIR__ . '/../phpmailer/phpmailer',
+            'aliases' => array(),
+            'reference' => '49cd7ea3d2563f028d7811f06864a53b1f15ff55',
             'dev_requirement' => false,
         ),
         'psr/container' => array(

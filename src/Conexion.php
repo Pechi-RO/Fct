@@ -20,6 +20,11 @@ class Conexion{
         $pass=$parametros['pass'];
         $bbdd=$parametros['bbdd'];
 
+        //$host="localhost";
+        //$user="usznyczd71ox0";
+        //$pass="usuario95";
+
+
         $dns="mysql:host=$host;dbname=$bbdd;charset=utf8mb4";
         try{
             $option=[PDO::ATTR_ERRMODE=>PDO::ERRMODE_EXCEPTION];

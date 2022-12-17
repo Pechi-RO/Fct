@@ -17,6 +17,7 @@
     "require": {
         "fakerphp/faker": "^1.21",
         "bluemmb/faker-picsum-photos-provider": "^2.0",
-        "mmo/faker-images": "^0.7.0"
+        "mmo/faker-images": "^0.7.0",
+        "phpmailer/phpmailer": "^6.7"
     }
 }
