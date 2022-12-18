@@ -18,7 +18,6 @@ $url.= $_SERVER['HTTP_HOST'];
 // Append the requested resource location to the URL   
 $url.= $_SERVER['REQUEST_URI'];    
   
-echo $url;  
 //echo "<pre>files".var_dump($_FILES)."</pre>";
 
 if(isset($_POST['nombre'])){
@@ -163,6 +162,9 @@ if(!$error){
     }
     ?>
 
+<h4 class="mb-5"><strong>Crear vivienda</strong></h4>
+
+
     <form action="" method="POST" enctype="multipart/form-data">
 
     <div class="card">
@@ -188,7 +190,7 @@ if(!$error){
                     
                     <h2 class="mt-5">
                     <label for="precio">Precio</label>
-                    <input name="precio" id="precio" type="number" required></input>
+                    <input class="form-control" name="precio" id="precio" type="number" required></input>
                     </h2>
                     
                     

@@ -109,8 +109,11 @@ class Imagenes extends Conexion {
     
     }
 
+
+
     public function read($id){
-        $q="select *
+        $q="select *,
+        (SELECT MAX(orden) FROM imagenes where vivienda_id=:i) as max
             from imagenes
             WHERE vivienda_id=:i
             ORDER BY orden ASC

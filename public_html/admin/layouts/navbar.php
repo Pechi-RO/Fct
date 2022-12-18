@@ -90,7 +90,7 @@ function myFunction() {
         -->
 
       <li class="nav-item">
-      <form method="GET" action="viviendas.php" class="d-flex">
+      <form method="GET" action="../viviendas.php" class="d-flex">
         <div style="display: none;">
         <input type="hidden" name="filtro" value="<?php if(isset($_GET['filtro'])) echo $_GET['filtro'];?>">
         </div>

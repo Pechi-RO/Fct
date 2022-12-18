@@ -23,7 +23,12 @@ $url.= $_SERVER['REQUEST_URI'];
 if(isset($_GET['id'])){
     $vivienda=(new Viviendas)->read($_GET['id']);
     $item=$vivienda->fetch(PDO::FETCH_OBJ);
-}else{
+}else if(isset($_POST['id'])){
+    $vivienda=(new Viviendas)->read($_POST['id']);
+    $item=$vivienda->fetch(PDO::FETCH_OBJ);
+}
+else{
+    die('ola');
     header("Location:index.php");
 }
 
@@ -35,9 +40,14 @@ foreach($viviendas as $item){
         $_SESSION['error']="Nombre duplicado, no se creó la entrada";
     }
 }
-    
-//creamos vivienda
+
+//update
 if(!$error){
+    if(isset($_GET['id'])){
+        $id=$_GET['id'];
+    }else if(isset($_POST['id'])){
+        $id=$_POST['id'];
+    }
     (new Viviendas)
     ->setNombre($_POST['nombre'])
     ->setDescripcion($_POST['descripcion'])
@@ -46,15 +56,16 @@ if(!$error){
     ->setTipo($_POST['tipo'])
     ->setZona($_POST['zona'])
     ->setPrecio($_POST['precio'])
-    ->create();
-    $_SESSION['mensaje_V']="Vivienda creada con éxito";
-    
-    $id=(new Viviendas)->selectLastId();
+    ->update($id);
+    $_SESSION['mensaje_V']="Vivienda actualizada con éxito";
+
 
     
       //comprobamos imagen
             //1.- veo si he subido o no una imagen
             if(isset($_FILES)){
+                $imgs=(new Imagenes)->read($id);
+
                 for($i=0;$i<count($_FILES['imagen']['name']);$i++){
                     if(is_uploaded_file($_FILES['imagen']['tmp_name'][$i])){
                                 //he subido un fichero
@@ -63,8 +74,12 @@ if(!$error){
                                     //he subido la imagen
                                     $imagen=new Imagenes;
                                     $imagen->setNombre($nombre);
-                                    $imagen->setVivienda_id($id['id']);
-                                    $imagen->setOrden($i);
+                                    $imagen->setVivienda_id($id);
+                                    if(count($imgs)!=0){
+                                    $imagen->setOrden($i+count($imgs));
+                                    }else{
+                                        $imagen->setOrden($i);
+                                    }
                                     $imagen->setDir('http://localhost/mi_php/FCT/public_html/img/viviendas/');
                                     
                                     if(move_uploaded_file($_FILES['imagen']['tmp_name'][$i],"http://localhost/mi_php/FCT/public_html/img/viviendas/".$nombre)){
@@ -90,8 +105,8 @@ if(!$error){
             
             }
 }
-
-        
+        $_SESSION['mensaje']="Vivienda actualizda con éxito";
+        header('Location:index.php');
            
 }
 
@@ -170,13 +185,16 @@ if(!$error){
     }
     ?>
 
+<h4 class="mb-5"><strong>Actualizar viviendas</strong></h4>
+
     <form action="" method="POST" enctype="multipart/form-data">
+        <input type="hidden" name="id" value="<?= $_GET['id']?>">
 
     <div class="card">
-        <div class="card-body">
-            <h3 class="card-title">
+        <div class="card-body ">
+            <h3 class="card-title col-lg-5 col-md-5 col-sm-6">
                 <label for="nombre">Nombre</label>
-            <input name="nombre" id="nombre" required value="<?php if(isset($_POST['nombre'])){echo $_POST['nombre'];}else{echo $item->nombre;}?>">
+            <input name="nombre" id="nombre" class="form-control" required value="<?php if(isset($_POST['nombre'])){echo $_POST['nombre'];}else{echo $item->nombre;}?>">
             </input>
             </h3>
             <div class="row">
@@ -188,14 +206,13 @@ if(!$error){
                 <div class="col-lg-7 col-md-7 col-sm-6">
                     <h4 class="box-title mt-5">
                     <label for="descripcion">Descripcion</label>
-                    <textarea name="descripcion" id="descripcion" class="form-control" <?php if(isset($_POST['descripcion'])){echo $_POST['descripcion'];}else{echo $item->descripcion;}?>>
-                    </textarea>
+                    <textarea name="descripcion" id="descripcion" class="form-control" ><?php if(isset($_POST['descripcion'])){echo $_POST['descripcion'];}else{echo $item->descripcion;}?></textarea>
                     </h4>
                     
                     
                     <h2 class="mt-5">
                     <label for="precio">Precio</label>
-                    <input name="precio" id="precio" type="number" required value="<?php if(isset($_POST['precio'])){echo $_POST['precio'];}else{echo $item->precio;}?>"></input>
+                    <input class="form-control" name="precio" id="precio" type="number" required value="<?php if(isset($_POST['precio'])){echo $_POST['precio'];}else{echo $item->precio;}?>"></input>
                     </h2>
                     
                     
@@ -287,8 +304,7 @@ if(!$error){
                 </div>
                 <h4 class="box-title mt-5">
                     <label for="info">Información adicional</label>
-                    <textarea name="info" id="info" class="form-control" value="<?php if(isset($_POST['info'])){echo $_POST['info'];}else{echo $item->info;}?>">
-                    </textarea>
+                    <textarea name="info" id="info" class="form-control" ><?php if(isset($_POST['info'])){echo $_POST['info'];}else{echo $item->info;}?></textarea>
                     </h4>
                 <div class="col-lg-12 col-md-12 col-sm-12">
 
@@ -347,7 +363,7 @@ if(!$error){
     border-radius: var(--bs-btn-border-radius);
     background-color: var(--bs-btn-bg);
     transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out, border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
-    ">Crear</button>
+    ">Actualizar</button>
 
     </form>
   </section>

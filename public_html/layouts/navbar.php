@@ -80,7 +80,7 @@ function myFunction() {
         if(isset($_SESSION['usuario'])){
           ?>
            <li class="nav-item" style="margin-right: 1rem;">
-          <a class="nav-link <?php if($cur_page=="admin")echo "active";?>" href="./index.php">Admin</a>
+          <a class="nav-link <?php if($cur_page=="admin")echo "active";?>" href="./admin/index.php">Admin</a>
         </li>
           <?php
         }
@@ -100,7 +100,7 @@ function myFunction() {
         -->
 
       <li class="nav-item">
-      <form method="GET" action="viviendas.php" class="d-flex">
+      <form method="GET" action="./viviendas.php" class="d-flex">
         <div style="display: none;">
         <input type="hidden" name="filtro" value="<?php if(isset($_GET['filtro'])) echo $_GET['filtro'];?>">
         </div>

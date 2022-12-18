@@ -87,6 +87,14 @@ $viviendas=(new Viviendas)->readAllViviendas();
         <?php
         unset($_SESSION['mensaje']);
     }
+    if(isset($_SESSION['mensaje_V'])){
+      ?>
+      <div class="alert alert-success" role="alert">
+        <?= $_SESSION['mensaje_V'];?>
+      </div>
+      <?php
+      unset($_SESSION['mensaje_V']);
+  }
     ?>
 
     <table class="table table-hover table-responsive caption-top">

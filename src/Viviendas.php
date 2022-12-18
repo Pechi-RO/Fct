@@ -171,6 +171,36 @@ class Viviendas extends Conexion {
         return $stmt->fetch();
     
     }
+    public function update($id){
+        $q="UPDATE viviendas SET
+        nombre=:n,
+        descripcion=:d,
+        info=:i,
+        estado=:e,
+        tipo=:t,
+        zona=:z,
+        precio=:p 
+        WHERE id=:id 
+         ";
+        $stmt=parent::$conexion->prepare($q);
+        try{
+            $stmt->execute([
+                ':n'=>$this->nombre,
+                ':d'=>$this->descripcion,
+                ':i'=>$this->info,
+                ':e'=>$this->estado,
+                ':t'=>$this->tipo,            
+                ':z'=>$this->zona,               
+                ':p'=>$this->precio, 
+                ':id'=>$id              
+   
+            ]);
+        }
+        catch(PDOException $ex){
+            die('Error al actualizar Viviendas: '.$ex->getMessage());
+        }
+        parent::$conexion=null;
+    }
 
     public function delete($id){
         $q="DELETE FROM viviendas
@@ -215,9 +245,9 @@ class Viviendas extends Conexion {
         }else{
             $where="";
             if(isset($filtros['buscador']) && $filtros['buscador']!=""){
-                $where.="(viviendas.nombre LIKE '{$filtros['buscador']}') AND";
+                $where.="(viviendas.nombre LIKE '%{$filtros['buscador']}%') AND";
             }
-            if(isset($filtros['filtro']) && $_GET['filtro']!=""){
+            if(isset($filtros['filtro']) && $_GET['filtro']!="" && $_GET['filtro']!="todos" ){
                 $where.=" (viviendas.tipo = '{$filtros['filtro']}') AND";
             }
 

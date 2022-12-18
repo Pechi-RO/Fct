@@ -131,6 +131,8 @@ $imagenes=(new Imagenes)->readAllImagenes();
             </form>
             
             <ul class="list-menu">
+            <li><a href="<?php echo $_SERVER['PHP_SELF']."?filtro=todos";?>">Todos  </a></li>
+
               <?php
               $tipos=(new Viviendas)->getTipos();
               foreach($tipos as $v){
@@ -232,7 +234,7 @@ $imagenes=(new Imagenes)->readAllImagenes();
         //echo "<pre>";var_dump($viviendas);echo "</pre>";
         foreach($viviendas as $item){
 
-          if(isset($_GET['filtro']) && $_GET['filtro']!=""){
+          if(isset($_GET['filtro']) && $_GET['filtro']!="" && $_GET['filtro']!="todos"){
 
             if($_GET['filtro']==$item->tipo){
 
@@ -245,10 +247,13 @@ $imagenes=(new Imagenes)->readAllImagenes();
                 $key=array_search($item->id,array_column($imagenes,"vivienda_id"));
                 if($key){
                     //encontrado
-                    echo $imagenes[$key]['nombre'];
-                }else{
+                    if($imagenes[$key]['dir']!=NULL){
+                      echo "img/viviendas/".$imagenes[$key]['nombre'];
+                    }else{
+                      echo $imagenes[$key]['nombre'];
+                    }                }else{
                     //
-                    echo "img\viviendas\default1.jpg";
+                    echo "img/viviendas/default1.jpg";
                 }
                 ?>" class="img-fluid" />
                 <a href="#!">
@@ -279,10 +284,14 @@ $imagenes=(new Imagenes)->readAllImagenes();
                 $key=array_search($item->id,array_column($imagenes,"vivienda_id"));
                 if($key){
                     //encontrado
-                    echo $imagenes[$key]['nombre'];
+                    if($imagenes[$key]['dir']!=NULL){
+                      echo "img/viviendas/".$imagenes[$key]['nombre'];
+                    }else{
+                      echo $imagenes[$key]['nombre'];
+                    }
                 }else{
                     //
-                    echo "img\viviendas\default1.jpg";
+                    echo "img/viviendas/default1.jpg";
                 }
                 ?>" class="img-fluid" />
                 <a href="#!">

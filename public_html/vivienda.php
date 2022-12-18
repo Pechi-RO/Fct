@@ -32,8 +32,7 @@ $item=$vivienda->fetch(PDO::FETCH_OBJ);
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.11.2/css/all.css" />
     <!-- Google Fonts Roboto -->
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" />
-    <!-- Custom styles -->
-    <link rel="stylesheet" href="../css/style.css" />
+
         <style>
       /* Carousel styling */
       #introCarousel,
@@ -68,7 +67,14 @@ $item=$vivienda->fetch(PDO::FETCH_OBJ);
             <h3 class="card-title"><?= $item->nombre;?></h3>
             <div class="row">
                 <div class="col-lg-5 col-md-5 col-sm-6">
-                    <div class="white-box text-center"><img src="<?= $imagenes[0]['nombre'];?>" style="width:100%"></div>
+                    <div class="white-box text-center"><img src="<?php
+                     if($imagenes[0]['dir']==NULL){
+                      echo $imagenes[0]['nombre'];
+                     }else{
+                      echo "img/viviendas/".$imagenes[0]['nombre'];
+                     }
+                     
+                     ?>" style="width:100%"></div>
                 </div>
                 <div class="col-lg-7 col-md-7 col-sm-6">
                     <h4 class="box-title mt-5">Descripción</h4>
@@ -103,7 +109,14 @@ $item=$vivienda->fetch(PDO::FETCH_OBJ);
         for($i=0;$i<count($imagenes);$i++){
         ?>
         <div class="carousel-item <?php if($i==0)echo "active";?>">
-          <img src="<?= $imagenes[$i]['nombre'];?>" width="100%" height="100%">
+          <img src="<?php
+           if($imagenes[$i]['dir']==NULL){
+            echo $imagenes[$i]['nombre'];
+           }else{
+            echo "img/viviendas/".$imagenes[$i]['nombre'];
+           }
+           
+           ?>" width="100%" height="100%">
         </div>
         <?php
         }
@@ -129,9 +142,8 @@ $item=$vivienda->fetch(PDO::FETCH_OBJ);
         </div>
     </div>
 </div>
-<script type="text/javascript" src="../js/mdb.min.js"></script>
-    <!-- Custom scripts -->
-    <script type="text/javascript" src="../js/script.js"></script>
+<script type="text/javascript" src="./js/mdb.min.js"></script>
+
     <style>
       
     </style>
