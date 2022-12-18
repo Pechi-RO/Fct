@@ -121,10 +121,23 @@ class Viviendas extends Conexion {
         parent::$conexion=null;
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
+    public function getEstados(){
+        $q="SELECT DISTINCT estado from viviendas";
+        $stmt=parent::$conexion->prepare($q);
+        try{
+            $stmt->execute();
+        }
+        catch(PDOException $ex){
+            die('Error al leer todos los estados de viviendas: '.$ex->getMessage());
+        }
+        parent::$conexion=null;
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
 
     public function create(){
         $q="INSERT INTO 
-            Viviendas (nombre,descripcion,info,estado,tipo,zona,precio) 
+            viviendas (nombre,descripcion,info,estado,tipo,zona,precio) 
             values(:n,:d,:i,:e,:t,:z,:p)";
         $stmt=parent::$conexion->prepare($q);
         try{
@@ -145,6 +158,37 @@ class Viviendas extends Conexion {
         parent::$conexion=null;
     
     }
+    public function selectLastId(){
+        $q="SELECT id FROM viviendas ORDER BY id DESC LIMIT 1";
+        $stmt=parent::$conexion->prepare($q);
+        try{
+            $stmt->execute();
+        }
+        catch(PDOException $ex){
+            die('Error al devolver la ultima id creada de viviendas: '.$ex->getMessage());
+        }
+        parent::$conexion=null;
+        return $stmt->fetch();
+    
+    }
+
+    public function delete($id){
+        $q="DELETE FROM viviendas
+            WHERE id=:i
+            ";
+        $stmt=parent::$conexion->prepare($q);
+        try{
+            $stmt->execute([
+                ':i'=>$id,
+            ]);
+        }
+        catch(PDOException $ex){
+            die('Error al borrar Viviendas: '.$ex->getMessage());
+        }
+        parent::$conexion=null;
+    
+    }
+
     public function read($id){
             $q="select *
                 from viviendas

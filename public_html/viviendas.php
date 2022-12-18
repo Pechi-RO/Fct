@@ -1,4 +1,5 @@
 <?php
+session_start();
 require dirname(__DIR__,1)."/vendor/autoload.php";
 
 //echo __DIR__;
@@ -26,15 +27,15 @@ $imagenes=(new Imagenes)->readAllImagenes();
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
     <meta http-equiv="x-ua-compatible" content="ie=edge" />
-    <title>Material Design for Bootstrap</title>
+    <title>Viviendas</title>
+    <link rel="icon" type="image/x-icon" href="./favicon.ico">
     <!-- Font Awesome -->
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.11.2/css/all.css" />
     <!-- Google Fonts Roboto -->
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" />
     <!-- MDB -->
-    <link rel="stylesheet" href="../css/mdb.min.css" />
-    <!-- Custom styles -->
-    <link rel="stylesheet" href="../css/style.css" />
+    <link rel="stylesheet" href="./css/mdb.min.css" />
+
 
 </head>
 <body>
@@ -69,9 +70,7 @@ $imagenes=(new Imagenes)->readAllImagenes();
     ?>
     <!-- Navbar -->
     <!-- MDB -->
-    <link rel="stylesheet" href="../css/mdb.min.css" />
-    <!-- Custom styles -->
-    <link rel="stylesheet" href="../css/style.css" />
+    <link rel="stylesheet" href="./css/mdb.min.css" />
 
 <style>
   .custom-control{
@@ -336,7 +335,7 @@ $imagenes=(new Imagenes)->readAllImagenes();
     <!-- Copyright -->
     <div class="text-center p-3" style="background-color: rgba(0, 0, 0, 0.2);">
       © 2022 Copyright:
-      <img src="../CC_BY-NC.png">
+      <img src="./CC_BY-NC.png">
 
       <a class="text-dark" href="">Francisco Ruiz Ortega</a>
     </div>
@@ -344,11 +343,10 @@ $imagenes=(new Imagenes)->readAllImagenes();
   </footer>
   <!--Footer-->
     <!-- MDB -->
-    <script type="text/javascript" src="../js/mdb.min.js"></script>
-    <!-- Custom scripts -->
-    <script type="text/javascript" src="../js/script.js"></script>
+    <script type="text/javascript" src="./js/mdb.min.js"></script>
+
     <script>
-  window.onload=eventos()
+  window.onload=eventos
   function eventos(){
     document.getElementById('rango').addEventListener('change',cambiarPrecio,false)
     document.getElementById('min').addEventListener('change',cambiarPrecio,false)

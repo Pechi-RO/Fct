@@ -12,6 +12,7 @@ class Imagenes extends Conexion {
     private $nombre;
     private $vivienda_id;
     private $orden;
+    private $dir;
     
     public function __construct()
     {
@@ -36,6 +37,7 @@ class Imagenes extends Conexion {
             for($i=0;$i<3;$i++){
                  $vivienda_id=$item->id;
             //$nombre=$faker->image($actual_link."img/vivendas", 640, 480, null, false);
+            //no creamos $dir con faker
             $nombre=$faker->imageUrl();
             $orden=$faker->numberBetween(0,10);
             (new Imagenes)
@@ -46,6 +48,19 @@ class Imagenes extends Conexion {
             }
         }
         
+    }
+    public function isImagen($tipo){
+
+        $tiposBuenos=[
+            'image/jpeg',
+            'image/bmp',
+            'image/png',
+            'image/webp',
+            'image/gif',
+            'image/svg-xml',
+            'image/x-icon'
+        ];
+        return in_array($tipo, $tiposBuenos);
     }
 
     private function hayImagenes(){
@@ -76,15 +91,15 @@ class Imagenes extends Conexion {
 
     public function create(){
         $q="INSERT INTO 
-            imagenes (nombre,vivienda_id,orden) 
-            values(:n,:v_id,:o)";
+            imagenes (nombre,vivienda_id,orden,dir) 
+            values(:n,:v_id,:o,:d)";
         $stmt=parent::$conexion->prepare($q);
         try{
             $stmt->execute([
                 ':n'=>$this->nombre,
                 ':v_id'=>$this->vivienda_id,
                 ':o'=>$this->orden,
-               
+                ':d'=>$this->dir,
             ]);
         }
         catch(PDOException $ex){
@@ -190,6 +205,26 @@ class Imagenes extends Conexion {
     public function setOrden($orden)
     {
         $this->orden = $orden;
+
+        return $this;
+    }
+
+    /**
+     * Get the value of dir
+     */ 
+    public function getDir()
+    {
+        return $this->dir;
+    }
+
+    /**
+     * Set the value of dir
+     *
+     * @return  self
+     */ 
+    public function setDir($dir)
+    {
+        $this->dir = $dir;
 
         return $this;
     }

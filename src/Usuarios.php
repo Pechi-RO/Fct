@@ -53,7 +53,7 @@ class Usuarios extends Conexion {
 
     public function create(){
         $q="INSERT INTO 
-            Users (nombre,email,password) 
+            users (nombre,email,password) 
             values(:n,:e,:p)";
         $stmt=parent::$conexion->prepare($q);
         try{
@@ -65,13 +65,24 @@ class Usuarios extends Conexion {
             ]);
         }
         catch(PDOException $ex){
-            die('Error al crear Autos: '.$ex->getMessage());
+            die('Error al crear Usuarios: '.$ex->getMessage());
         }
         parent::$conexion=null;
     
     }
 
-
+    public function readAllUsuarios(){
+        $q="select * from users";
+        $stmt=parent::$conexion->prepare($q);
+        try{
+            $stmt->execute();
+        }
+        catch(PDOException $ex){
+            die('Error al leer todos los datos de users: '.$ex->getMessage());
+        }
+        parent::$conexion=null;
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
 
     /**
      * Get the value of id

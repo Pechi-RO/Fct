@@ -1,9 +1,12 @@
 <?php
+session_start();
 require dirname(__DIR__,2)."/vendor/autoload.php";
 use Fct\Usuarios;
 use Fct\Imagenes;
 use Fct\Viviendas;
-
+if(!isset($_SESSION['usuario'])){
+  header('Location:..(index.php');
+}
 //$actual_link = "http://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]";
 //echo $actual_link;
 
@@ -22,49 +25,23 @@ $viviendas=(new Viviendas)->readAllViviendas();
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
     <meta http-equiv="x-ua-compatible" content="ie=edge" />
-    <title>Material Design for Bootstrap</title>
+    <title>Panel de administrador</title>
+    <link rel="icon" type="image/x-icon" href="../favicon.ico">
+
     <!-- Font Awesome -->
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.11.2/css/all.css" />
     <!-- Google Fonts Roboto -->
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" />
     <!-- MDB -->
-    <link rel="stylesheet" href="../../css/mdb.min.css" />
-    <!-- Custom styles -->
-    <link rel="stylesheet" href="../../css/style.css" />
+    <link rel="stylesheet" href="../css/mdb.min.css" />
+
 
 </head>
 <body>
       <!--Main Navigation-->
   <header>
     <style>
-      /* Carousel styling */
-      #introCarousel,
-      .carousel-inner,
-      .carousel-item,
-      .carousel-item.active {
-        height: 100vh;
-      }
 
-      .carousel-item:nth-child(1) {
-        background-image: url('../img/viviendas/default1.jpg');
-        background-repeat: no-repeat;
-        background-size: cover;
-        background-position: center center;
-      }
-
-      .carousel-item:nth-child(2) {
-        background-image: url('../img/viviendas/default2.jpg');
-        background-repeat: no-repeat;
-        background-size: cover;
-        background-position: center center;
-      }
-
-      .carousel-item:nth-child(3) {
-        background-image: url('../img/viviendas/default3.jpg');
-        background-repeat: no-repeat;
-        background-size: cover;
-        background-position: center center;
-      }
 
       /* Height for devices larger than 576px */
       @media (min-width: 992px) {
@@ -85,24 +62,47 @@ $viviendas=(new Viviendas)->readAllViviendas();
     ?>
     <!-- Navbar -->
     <!-- MDB -->
-    <link rel="stylesheet" href="../../css/mdb.min.css" />
-    <!-- Custom styles -->
-    <link rel="stylesheet" href="../../css/style.css" />
+    <link rel="stylesheet" href="../css/mdb.min.css" />
+
 
 
     <div class="container">
     <h4 class="mb-5 text-center">
       
       </h4>
+      <?php
+    if(isset($_SESSION['error'])){
+        ?>
+        <div class="alert alert-danger" role="alert">
+          <?= $_SESSION['error'];?>
+        </div>
+        <?php
+        unset($_SESSION['error']);
+    }
+    if(isset($_SESSION['mensaje'])){
+        ?>
+        <div class="alert alert-success" role="alert">
+          <?= $_SESSION['mensaje'];?>
+        </div>
+        <?php
+        unset($_SESSION['mensaje']);
+    }
+    ?>
 
-      
     <table class="table table-hover table-responsive caption-top">
       
   <thead>
   <caption class="mb-5 text-center">
+    <div>
       <strong>
           INMUEBLES        
         </strong>
+    </div>
+    <div>
+        <a href="vivienda.php" class="pull-right btn btn-secondary"><i class="fa-solid fa-plus"></i> Nuevo</a>
+    </div>
+      
+
       </caption>
     <tr>
       <th scope="col">ID</th>
@@ -110,6 +110,7 @@ $viviendas=(new Viviendas)->readAllViviendas();
       <th scope="col">Precio</th>
       <th scope="col">Zona</th>
       <th scope="col">Tipo de inmueble</th>
+      <th></th>
     </tr>
   </thead>
   <tbody>
@@ -117,28 +118,37 @@ $viviendas=(new Viviendas)->readAllViviendas();
     foreach($viviendas as $item){
       ?>
        <tr>
-      <th scope="row"><?= $item->id;?></th>
-      <td>Mark</td>
-      <td>Otto</td>
-      <td>@mdo</td>
+      <th scope="row">
+      <a href="edit_vivienda.php?id=<?= $item->id;?>" class="btn btn-primary " style="border-radius: 2rem;">
+      <?= $item->id;?>
+      </a>
+      </th>
+      <td>
+                  <?= $item->nombre;?>
+
+      </td>
+      <td><?= $item->precio;?> &euro;</td>
+      <td><?= $item->zona;?></td>
+      <td><?= $item->tipo;?></td>
+      <td>
+        <form method="POST" action="acciones.php">
+          <input type="hidden" name="id" value="<?= $item->id;?>">
+        <button type="submit" class="btn btn-block btn-danger">
+        Borrar
+        </button>
+        </form>
+       
+        <a href="edit_vivienda.php?id=<?= $item->id;?>" class="btn btn-block btn-warning">
+        Editar
+        </a>
+      </td>
+
     </tr>
       <?php
-
-
     }
     ?>
    
-    <tr>
-      <th scope="row">2</th>
-      <td>Jacob</td>
-      <td>Thornton</td>
-      <td>@fat</td>
-    </tr>
-    <tr>
-      <th scope="row">3</th>
-      <td colspan="2">Larry the Bird</td>
-      <td>@twitter</td>
-    </tr>
+   
   </tbody>
 </table>
 
@@ -158,15 +168,14 @@ $viviendas=(new Viviendas)->readAllViviendas();
     <!-- Copyright -->
     <div class="text-center p-3" style="background-color: rgba(0, 0, 0, 0.2);">
       © 2022 Copyright:
-      <img src="../../CC_BY-NC.png">
+      <img src="../CC_BY-NC.png">
       <a class="text-dark" href="">Francisco Ruiz Ortega</a>
     </div>
     <!-- Copyright -->
   </footer>
   <!--Footer-->
     <!-- MDB -->
-    <script type="text/javascript" src="../../js/mdb.min.js"></script>
-    <!-- Custom scripts -->
-    <script type="text/javascript" src="../../js/script.js"></script>
+    <script type="text/javascript" src="../js/mdb.min.js"></script>
+
 </body>
 </html>

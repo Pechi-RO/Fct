@@ -1,8 +1,31 @@
 <?php
+
+session_start();
+
 require dirname(__DIR__,1)."/vendor/autoload.php";
 use Fct\Usuarios;
 use Fct\Imagenes;
 use Fct\Viviendas;
+
+if(isset($_POST['email'])){
+  $usuarios=(new Usuarios)->readAllUsuarios();
+  foreach($usuarios as $v){
+      //var_dump($v);
+      if(($v['email']==$_POST['email']) && $v['password']==$_POST['password']){
+          $_SESSION['usuario']=$v['name'];
+          header('Location:index.php');
+          die();
+      }
+  }
+  $_SESSION['error']="credenciales invalidas";
+  header("Location:login.php");
+  die();
+}
+
+if(isset($_GET['logout'])){
+  unset($_SESSION['usuario']);
+  session_destroy();
+}
 
 //$actual_link = "http://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]";
 //echo $actual_link;
@@ -16,20 +39,22 @@ $imagenes=(new Imagenes)->readAllImagenes();
 
 ?>
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
     <meta http-equiv="x-ua-compatible" content="ie=edge" />
-    <title>Material Design for Bootstrap</title>
+    <title>InmobiliariaFct</title>
+    <link rel="icon" type="image/x-icon" href="./favicon.ico">
+
     <!-- Font Awesome -->
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.11.2/css/all.css" />
     <!-- Google Fonts Roboto -->
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" />
     <!-- MDB -->
-    <link rel="stylesheet" href="../css/mdb.min.css" />
+    <link rel="stylesheet" href="./css/mdb.min.css" />
     <!-- Custom styles -->
-    <link rel="stylesheet" href="../css/style.css" />
+
 
 </head>
 <body>
@@ -45,21 +70,21 @@ $imagenes=(new Imagenes)->readAllImagenes();
       }
 
       .carousel-item:nth-child(1) {
-        background-image: url('../img/viviendas/default1.jpg');
+        background-image: url('./img/viviendas/default1.jpg');
         background-repeat: no-repeat;
         background-size: cover;
         background-position: center center;
       }
 
       .carousel-item:nth-child(2) {
-        background-image: url('../img/viviendas/default2.jpg');
+        background-image: url('./img/viviendas/default2.jpg');
         background-repeat: no-repeat;
         background-size: cover;
         background-position: center center;
       }
 
       .carousel-item:nth-child(3) {
-        background-image: url('../img/viviendas/default3.jpg');
+        background-image: url('./img/viviendas/default3.jpg');
         background-repeat: no-repeat;
         background-size: cover;
         background-position: center center;
@@ -83,9 +108,8 @@ $imagenes=(new Imagenes)->readAllImagenes();
     ?>
     <!-- Navbar -->
     <!-- MDB -->
-    <link rel="stylesheet" href="../css/mdb.min.css" />
-    <!-- Custom styles -->
-    <link rel="stylesheet" href="../css/style.css" />
+    <link rel="stylesheet" href="./css/mdb.min.css" />
+
 
     <!-- Carousel wrapper -->
     <div id="introCarousel" class="carousel slide carousel-fade shadow-2-strong" data-mdb-ride="carousel" style="margin-top: 10px;">
@@ -157,7 +181,7 @@ $imagenes=(new Imagenes)->readAllImagenes();
         <div class="row">
           <div class="col-md-6 gx-5 mb-4">
             <div class="bg-image hover-overlay ripple shadow-2-strong" data-mdb-ripple-color="light">
-              <img src="../img//viviendas/trust.jpeg" class="img-fluid" />
+              <img src="./img//viviendas/trust.jpeg" class="img-fluid" />
               <a href="#!">
                 <div class="mask" style="background-color: rgba(251, 251, 251, 0.15);"></div>
               </a>
@@ -224,13 +248,13 @@ $imagenes=(new Imagenes)->readAllImagenes();
 
       <hr class="my-5" />
 
-      <!--Section: Content-->
-      <section class="mb-5">
+     <!--Section: Content-->
+     <section class="mb-5">
         <h4 class="mb-5 text-center"><strong>Póngase en contacto con nosotros</strong></h4>
 
         <div class="row d-flex justify-content-center">
           <div class="col-md-6">
-            <form>
+            <form action="send.php" method="POST" action="send.php" id="miform">
               <!-- 2 column grid layout with text inputs for the first and last names -->
               <div class="row mb-4">
                 <div class="col">
@@ -241,8 +265,8 @@ $imagenes=(new Imagenes)->readAllImagenes();
                 </div>
                 <div class="col">
                   <div class="form-outline">
-                    <input type="text" name="apellidos" id="apellidos" class="form-control" />
-                    <label class="form-label" for="apellidos">Apellidos</label>
+                    <input type="number"  name="telefono" id="telefono" class="form-control" />
+                    <label class="form-label" for="telefono">Teléfono</label>
                   </div>
                 </div>
               </div>
@@ -254,15 +278,16 @@ $imagenes=(new Imagenes)->readAllImagenes();
               </div>
 
               <!-- Password input -->
-              <div class="form-outline mb-4">
-                <input type="password" name="pass" id="pass" class="form-control" />
-                <label class="form-label" for="pass">Contraseña</label>
+              <label class="form-label">Mensaje</label>
+              <div class="form-outline mb-4" for="texto">
+               
+                <textarea name="texto" id="texto" class="form-control"></textarea>
               </div>
 
               
 
               <!-- Submit button -->
-              <button type="submit" class="btn btn-primary btn-block mb-4">
+              <button type="submit" id="boton" class="btn btn-primary btn-block mb-4">
                 Enviar
               </button>
 
@@ -286,15 +311,14 @@ $imagenes=(new Imagenes)->readAllImagenes();
     <!-- Copyright -->
     <div class="text-center p-3" style="background-color: rgba(0, 0, 0, 0.2);">
       © 2022 Copyright:
-      <img src="../CC_BY-NC.png">
+      <img src="./CC_BY-NC.png">
       <a class="text-dark" href="">Francisco Ruiz Ortega</a>
     </div>
     <!-- Copyright -->
   </footer>
   <!--Footer-->
     <!-- MDB -->
-    <script type="text/javascript" src="../js/mdb.min.js"></script>
-    <!-- Custom scripts -->
-    <script type="text/javascript" src="../js/script.js"></script>
+    <script type="text/javascript" src="./js/mdb.min.js"></script>
+
 </body>
 </html>

@@ -23,6 +23,8 @@ class Conexion{
         //$host="localhost";
         //$user="usznyczd71ox0";
         //$pass="usuario95";
+        //$bbdd="dbfd3v5gcuci9y";
+
 
 
         $dns="mysql:host=$host;dbname=$bbdd;charset=utf8mb4";
@@ -34,5 +36,6 @@ class Conexion{
             die('Error al conectar con la base de datos:'.$ex->getMessage());
         }
 
+        
     }
 }
